@@ -1,6 +1,6 @@
 package com.funnysaltyfish.partialjsonparser
 
-public enum class TokenType {
+enum class TokenType {
     String,
     Number,
     Boolean,

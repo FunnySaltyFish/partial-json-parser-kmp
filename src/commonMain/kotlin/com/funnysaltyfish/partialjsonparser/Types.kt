@@ -1,7 +1,5 @@
 package com.funnysaltyfish.partialjsonparser
 
-import kotlin.jvm.JvmInline
-
 /**
  * export interface ParseContext {
  *   source: string;
