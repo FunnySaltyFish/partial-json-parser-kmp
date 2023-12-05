@@ -29,7 +29,7 @@ abstract class Token(val type: TokenType) {
     class StringToken(override val value: String): Token(TokenType.String)
     class NumberToken(override val value: Number): Token(TokenType.Number)
     class BooleanToken(override val value: Boolean): Token(TokenType.Boolean)
-    data object NullToken: Token(TokenType.Null) {
+    object NullToken: Token(TokenType.Null) {
         override val value: Any? = null
     }
 
