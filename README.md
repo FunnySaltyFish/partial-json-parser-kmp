@@ -18,7 +18,7 @@ This library helps to parse partial JSON (that is, incomplete JSON) in Kotlin. I
 import com.funnysaltyfish.partialjsonparser.PartialJsonParser
 
 val partialJson = "{\"key\":\"Hello, "
-println(PartialJsonParser.parse(partialJson))
+println(PartialJsonParser.parse(partialJson)) // Map(key=Hello, )
 ```
 
 ## Implementation
