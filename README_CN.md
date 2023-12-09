@@ -10,12 +10,14 @@
 ![badge-jvm](http://img.shields.io/badge/Platform-JVM-red.svg?logo=openjdk)
 ![badge-linux](http://img.shields.io/badge/Platform-Linux-lightgrey.svg?logo=linux)
 
-[中文](README_CN.md)
+## 简介
 
-## Introduction
-This library helps to parse partial JSON (that is, incomplete JSON) in Kotlin. It is implemented in **pure Kotlin** so that can be used in KMP project.
+这个库帮助在 Kotlin 中解析部分JSON（即不完整的JSON，比如由类似 ChatGPT 的大语言模型在流式返回中生成的）。它是用 **纯 Kotlin** 实现的，可在 KMP 项目中使用。
 
-## Usage
+## 用法
+
+使用起来就一行：
+
 ```kotlin
 import com.funnysaltyfish.partialjsonparser.PartialJsonParser
 
@@ -25,9 +27,10 @@ println(map) // {key=Hello, }
 println(map?.get("key")) // Hello,
 ```
 
-The method will throw `JsonParseException` if the JSON is invalid. In some extreme cases, it might also throw `IndexOutOfBoundsException`.
+如果 JSON 无效，则该方法将抛出 `JsonParseException`。在某些极端情况下，它也可能抛出 `IndexOutOfBoundsException`
+（理论上说不会出现这种情况，如果有欢迎 issue 和 PR）。
 
-Actually, `parse` is just a combination of `tokenize` and `parseTokens`, you can use them separately if you want
+实际上，`parse` 只是 `tokenize` 和 `parseTokens` 的组合，你也可以分开用：
 
 ```kotlin
 fun parse(str: String): Any? {
@@ -36,15 +39,17 @@ fun parse(str: String): Any? {
 }
 ```
 
-## Implementation
-The library is published to Maven Central.
+## 实现
+
+该库已经发布到 Maven Central，通过下面的方式引入：
 
 ```groovy
 implementation("io.github.funnysaltyfish:partial-json-parser:1.0.1")
 ```
 
-## Examples
-Below are some examples: (originJsonString -> parsed map)
+## 示例
+
+以下是一些示例：（原始JSON字符串 -> 解析后的map）
 ```
 {"ke                      -> {}
 {"key"                    -> {}
@@ -62,7 +67,7 @@ Below are some examples: (originJsonString -> parsed map)
 {"k":[{"k2":1, "k3":2     -> {k=[{k2=1.0, k3=2.0}]}
 ```
 
-To see more examples, please run `ParseTest.kt`.
+总的原则是，我们会尽可能多的解析出信息。你可以运行 ParseTest.kt 文件来查看更多情况
 
-## Origin Source
-Interestingly, the code is converted from the TypeScript library [here](https://github.com/SimonTart/json-fragment-parser) by GitHub Copilot, I make it suitable for Kotlin style, modify some extreme cases, write some tests and publish it to Maven Central. Thanks for it.
+## 特别鸣谢
+这个库的代码是从 [这个 TypeScript 库](https://github.com/SimonTart/json-fragment-parser) 来的，用的 GitHub Copilot 一点点转换的, 我将它的代码略作调整以符合 Kotlin 风格、优化了一些极端情况、写了测试以及完成了发布。由衷的感谢一下！

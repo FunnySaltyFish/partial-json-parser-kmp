@@ -92,12 +92,13 @@ class ParseTest {
     ]
 }"""
 
-//    @Test
-//    fun test_one() {
-//        val json = "{\"key\":-1.2e" // value of exponent is incomplete
-//        val result = PartialJsonParser.parse(json)
-//        println(result)
-//    }
+    @Test
+    fun test_one() {
+        val partialJson = "{\"key\":\"Hello, "
+        val map = PartialJsonParser.parse(partialJson) as? Map<*, *> // Map(key=Hello, )
+        println(map) // {key=Hello, }
+        println(map?.get("key")) // Hello,
+    }
 
 
     @Test
