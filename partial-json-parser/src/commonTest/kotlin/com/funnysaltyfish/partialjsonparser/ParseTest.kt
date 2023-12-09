@@ -65,6 +65,33 @@ class ParseTest {
         "{\"key\":nill",
     )
 
+    private val testJson = """{
+    "字符串": "Hello, World!",
+    "整数": 123,
+    "浮点数": 3.14,
+    "指数": 3.14e6,
+    "布尔值": true,
+    "空值": null,
+    "对象": {
+        "属性1": "值1",
+        "属性2": "值2",
+        "带有换行符": "值1\n值2",
+        "带有unicode": "值1\u0020值2\u0020值3",
+        "嵌套引号": "它说:\"我不知道\"",
+    },
+    "数组": [1, 2, 3, 4],
+    "嵌套对象数组": [
+        {
+          "姓名": "张三",
+          "年龄": 30
+        },
+        {
+          "姓名": "李四",
+          "年龄": 25
+        }
+    ]
+}"""
+
 //    @Test
 //    fun test_one() {
 //        val json = "{\"key\":-1.2e" // value of exponent is incomplete
@@ -92,6 +119,27 @@ class ParseTest {
         }
     }
 
+    @Test
+    fun test_parseStreamJson() {
+        var i = 1
+        var currentPart = "{"
+        while (i < testJson.length) {
+            if (testJson[i].isWhitespace()) {
+                i++
+                continue
+            }
+            val char = testJson[i]
+            currentPart += char
+            try {
+                println(PartialJsonParser.parse(currentPart))
+            } catch (e: JsonParseException) {
+                //
+            }
+            i += 1
+        }
+    }
+
+
     private fun testParse(jsonList: Array<String>) {
         val indent = jsonList.maxOf { it.length }
         for (json in jsonList) {
@@ -104,7 +152,6 @@ class ParseTest {
                     append(result)
                 }
             )
-
         }
     }
 }

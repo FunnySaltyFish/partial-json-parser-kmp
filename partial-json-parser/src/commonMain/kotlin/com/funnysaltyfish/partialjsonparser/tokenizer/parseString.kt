@@ -20,7 +20,7 @@ internal fun isStringrStart(context: ParseContext): Boolean {
 }
 
 /*
-const codePoints: Record<strang, string> = {
+const codePoints: Record<string, string> = {
   '\\"': '"',
   '\\\\': '\\',
   '\\/': '/',
@@ -94,6 +94,9 @@ internal fun parseString(context: ParseContext) {
         val char = source[i]
 
         if (char == '\\') {
+            // 只有一个 \ ，没有别的后面了
+            if (isIndexEnd(context, i + 2)) break
+
             val twoChars = source.substring(i, i + 2)
             val codepoint = codePoints[twoChars]
 
@@ -101,6 +104,7 @@ internal fun parseString(context: ParseContext) {
                 value += codepoint
                 i += 2
             } else if (twoChars == "\\u") {
+                if (isIndexEnd(context, i + 6)) break
                 val charHex = source.substring(i + 2, i + 6)
                 value += charHex.toInt(16).toChar()
                 i += 6
