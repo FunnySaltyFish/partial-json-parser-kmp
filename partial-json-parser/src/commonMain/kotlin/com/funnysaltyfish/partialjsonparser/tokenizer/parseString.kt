@@ -85,6 +85,28 @@ export function parseString(context: ParseContext) {
 }
  */
 
+/**
+ * Index 安全的尝试从 start 开始读取 readChars 个字符（包括 start），返回实际读到了几个字符
+ *
+ * @param context
+ * @param start
+ * @param readChars
+ * @return
+ */
+private fun safeRead(context: ParseContext, start: Int, readChars: Int): Pair<String, Int> {
+    val (source, index) = context
+    var i = start
+    var read = 0
+    var value = ""
+
+    while (!isIndexEnd(context, i) && read < readChars) {
+        value += source[i]
+        i++
+        read++
+    }
+    return Pair(value, read)
+}
+
 internal fun parseString(context: ParseContext) {
     val (source, index) = context
     var value = ""
@@ -94,18 +116,21 @@ internal fun parseString(context: ParseContext) {
         val char = source[i]
 
         if (char == '\\') {
-            // 只有一个 \ ，没有别的后面了
-            if (isIndexEnd(context, i + 2)) break
-
-            val twoChars = source.substring(i, i + 2)
+            val (twoChars, n) = safeRead(context, i, 2)
+            if (n < 2) {
+                i += n
+                break
+            }
             val codepoint = codePoints[twoChars]
-
             if (codepoint != null) {
                 value += codepoint
                 i += 2
             } else if (twoChars == "\\u") {
-                if (isIndexEnd(context, i + 6)) break
-                val charHex = source.substring(i + 2, i + 6)
+                val (charHex, n) = safeRead(context, i + 2, 4)
+                if (n < 4) {
+                    i += 2 + n
+                    break
+                }
                 value += charHex.toInt(16).toChar()
                 i += 6
             } else {
