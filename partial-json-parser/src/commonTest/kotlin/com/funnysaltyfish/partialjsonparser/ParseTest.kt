@@ -94,7 +94,7 @@ class ParseTest {
 
     @Test
     fun test_one() {
-        val partialJson = "{\"k\":\"hu\\n\\n\\u0020空\\u0020格\\n结束"
+        val partialJson = "{\"key\":\"Hello, "
         val map = PartialJsonParser.parse(partialJson) as? Map<*, *> // Map(key=Hello, )
         println(map) // {key=Hello, }
         println(map?.get("key")) // Hello,

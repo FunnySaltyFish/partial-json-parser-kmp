@@ -40,7 +40,7 @@ fun parse(str: String): Any? {
 The library is published to Maven Central.
 
 ```groovy
-implementation("io.github.funnysaltyfish:partial-json-parser:1.0.1")
+implementation("io.github.funnysaltyfish:partial-json-parser:1.0.2")
 ```
 
 ## Examples
