@@ -1,8 +1,8 @@
 # Partial-JSON-Paser-KMP
 
 [![Kotlin Version](https://img.shields.io/badge/Kotlin-1.9.0-B125EA?logo=kotlin)](https://kotlinlang.org)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.funnysaltyfish/partial-json-parser.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/de.peilicke.sascha/kase64)
-[![License](http://img.shields.io/:License-Apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.funnysaltyfish/partial-json-parser.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.funnysaltyfish/partial-json-parser)
+[![License](http://img.shields.io/:License-MIT-blue.svg)](https://opensource.org/license/MIT/)
 
 ![badge-android](http://img.shields.io/badge/Platform-Android-brightgreen.svg?logo=android)
 ![badge-ios](http://img.shields.io/badge/Platform-iOS-orange.svg?logo=apple)
