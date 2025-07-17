@@ -1,6 +1,6 @@
 # Partial-JSON-Paser-KMP
 
-[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.9.0-B125EA?logo=kotlin)](https://kotlinlang.org)
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-2.2.0-B125EA?logo=kotlin)](https://kotlinlang.org)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.funnysaltyfish/partial-json-parser.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.funnysaltyfish/partial-json-parser)
 [![License](http://img.shields.io/:License-MIT-blue.svg)](https://opensource.org/license/MIT/)
 
@@ -40,7 +40,7 @@ fun parse(str: String): Any? {
 The library is published to Maven Central.
 
 ```groovy
-implementation("io.github.funnysaltyfish:partial-json-parser:1.0.2")
+implementation("io.github.funnysaltyfish:partial-json-parser:1.0.3")
 ```
 
 ## Examples

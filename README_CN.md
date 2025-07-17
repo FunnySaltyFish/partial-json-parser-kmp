@@ -1,6 +1,6 @@
 # Partial-JSON-Paser-KMP
 
-[![Kotlin Version](https://img.shields.io/badge/Kotlin-1.9.0-B125EA?logo=kotlin)](https://kotlinlang.org)
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-2.2.0-B125EA?logo=kotlin)](https://kotlinlang.org)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.funnysaltyfish/partial-json-parser.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/de.peilicke.sascha/kase64)
 [![License](http://img.shields.io/:License-Apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
@@ -44,7 +44,7 @@ fun parse(str: String): Any? {
 该库已经发布到 Maven Central，通过下面的方式引入：
 
 ```groovy
-implementation("io.github.funnysaltyfish:partial-json-parser:1.0.2")
+implementation("io.github.funnysaltyfish:partial-json-parser:1.0.3")
 ```
 
 ## 示例
