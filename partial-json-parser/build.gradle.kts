@@ -1,6 +1,9 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+
 plugins {
-    kotlin("multiplatform") version "1.9.0"
-    id("com.android.library") version "8.1.4"
+    kotlin("multiplatform") version "2.2.0"
+    id("com.android.library") version "8.11.1"
     id("convention.publication")
 }
 
@@ -17,10 +20,10 @@ repositories {
 }
 
 kotlin {
-    //发布android target
+    // 发布android target
     androidTarget {
-        //发布安卓需要额外配置这两个变体
-        publishAllLibraryVariants()
+        // 发布安卓需要额外配置这两个变体
+        publishLibraryVariants("debug", "release")
     }
 
     jvm {
@@ -39,18 +42,35 @@ kotlin {
             }
         }
     }
-    val hostOs = System.getProperty("os.name")
-    val isArm64 = System.getProperty("os.arch") == "aarch64"
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" && isArm64 -> macosArm64("native")
-        hostOs == "Mac OS X" && !isArm64 -> macosX64("native")
-        hostOs == "Linux" && isArm64 -> linuxArm64("native")
-        hostOs == "Linux" && !isArm64 -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        outputModuleName.set("composeApp")
+        browser {
+            val rootDirPath = project.rootDir.path
+            val projectDirPath = project.projectDir.path
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+                devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
+                    static = (static ?: mutableListOf()).apply {
+                        // Serve sources to debug inside browser
+                        add(rootDirPath)
+                        add(projectDirPath)
+                    }
+                }
+            }
+        }
+        binaries.executable()
     }
 
+    macosArm64()
+    macosX64()
+    linuxArm64()
+    linuxX64()
+    mingwX64()
+    iosArm64()
+    iosX64()
+    iosSimulatorArm64()
 
     sourceSets {
         val commonMain by getting
@@ -63,27 +83,7 @@ kotlin {
         val jvmTest by getting
         val jsMain by getting
         val jsTest by getting
-        val nativeMain by getting
-        val nativeTest by getting
     }
-
-    sourceSets["commonTest"].dependencies {
-        implementation(kotlin("test"))
-    }
-
-    // https://kotlinlang.org/docs/multiplatform-publish-lib.html#avoid-duplicate-publications
-//    val publicationsFromMainHost =
-//        listOf(jvm(), js(), androidTarget()).map { it.name } + "kotlinMultiplatform"
-//    publishing {
-//        publications {
-//            matching { it.name in publicationsFromMainHost }.all {
-//                val targetPublication = this@all
-//                tasks.withType<AbstractPublishToMaven>()
-//                    .matching { it.publication == targetPublication }
-//                    .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
-//            }
-//        }
-//    }
 }
 
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -92,7 +92,7 @@ android {
     namespace = Config.packageName
 
     defaultConfig {
-        compileSdk = 34
+        compileSdk = 35
         minSdk = 17
     }
 }

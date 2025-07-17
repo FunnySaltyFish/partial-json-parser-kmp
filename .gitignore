@@ -43,3 +43,6 @@ bin/
 
 secring.gpg
 local.properties
+
+.idea/
+.kotlin/
