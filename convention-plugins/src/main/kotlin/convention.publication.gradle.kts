@@ -97,6 +97,7 @@ signing {
     } else if (signingKeyId != null && signingPassword != null && signingSecretKeyRingFile != null) {
         // Use key ring file (for local development)
         // This will use the default GPG configuration
+        useGpgCmd()
     }
 
     sign(publishing.publications)
