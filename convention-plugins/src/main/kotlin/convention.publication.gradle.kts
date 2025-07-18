@@ -1,8 +1,4 @@
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.bundling.Jar
-import org.gradle.kotlin.dsl.`maven-publish`
-import org.gradle.kotlin.dsl.signing
-import java.util.*
+import java.util.Properties
 
 plugins {
     `maven-publish`
@@ -13,6 +9,7 @@ plugins {
 ext["signing.keyId"] = null
 ext["signing.password"] = null
 ext["signing.secretKeyRingFile"] = null
+ext["signing.key"] = null
 ext["ossrhUsername"] = null
 ext["ossrhPassword"] = null
 
@@ -30,6 +27,7 @@ if (secretPropsFile.exists()) {
     ext["signing.keyId"] = System.getenv("SIGNING_KEY_ID")
     ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
     ext["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
+    ext["signing.key"] = System.getenv("GPG_KEY_CONTENTS")
     ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
     ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
 }
@@ -79,6 +77,8 @@ publishing {
             }
             scm {
                 url.set("https://github.com/FunnySaltyFish/partial-json-parser-kmp")
+                connection.set("scm:git:git://github.com/FunnySaltyFish/partial-json-parser-kmp.git")
+                developerConnection.set("scm:git:ssh://git@github.com/FunnySaltyFish/partial-json-parser-kmp.git")
             }
         }
     }
@@ -86,5 +86,18 @@ publishing {
 
 // Signing artifacts. Signing.* extra properties values will be used
 signing {
+    val signingKeyId = getExtraString("signing.keyId")
+    val signingPassword = getExtraString("signing.password")
+    val signingSecretKeyRingFile = getExtraString("signing.secretKeyRingFile")
+    val signingKey = getExtraString("signing.key")
+
+    if (signingKey != null && signingKeyId != null && signingPassword != null) {
+        // Use in-memory signing (for CI/CD)
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    } else if (signingKeyId != null && signingPassword != null && signingSecretKeyRingFile != null) {
+        // Use key ring file (for local development)
+        // This will use the default GPG configuration
+    }
+
     sign(publishing.publications)
 }
