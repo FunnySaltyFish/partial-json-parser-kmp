@@ -20,6 +20,7 @@ on:
 jobs:
   publish:
     name: Release build and publish
+    environment: Product
     runs-on: macOS-latest
     steps:
       - name: Check out code
