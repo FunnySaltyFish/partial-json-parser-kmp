@@ -90,6 +90,8 @@ signing {
     val signingPassword = getExtraString("signing.password")
     val signingSecretKeyRingFile = getExtraString("signing.secretKeyRingFile")
     val signingKey = getExtraString("signing.key")
+    // 输出一下
+    println("Signing Key ID: $signingKeyId, Signing Password: ${signingPassword?.length}, Signing Secret Key Ring File: $signingSecretKeyRingFile, Signing Key: ${signingKey?.length}")
 
     if (signingKey != null && signingKeyId != null && signingPassword != null) {
         // Use in-memory signing (for CI/CD)
