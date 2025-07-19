@@ -1,8 +1,9 @@
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
 import java.util.Properties
 
 plugins {
-    `maven-publish`
-    signing
+    id("com.vanniktech.maven.publish")
 }
 
 // Stub secrets to let the project sync and build without the publication values set up
@@ -10,8 +11,8 @@ ext["signing.keyId"] = null
 ext["signing.password"] = null
 ext["signing.secretKeyRingFile"] = null
 ext["signing.key"] = null
-ext["ossrhUsername"] = null
-ext["ossrhPassword"] = null
+ext["mavenCentralUsername"] = null
+ext["mavenCentralPassword"] = null
 
 // Grabbing secrets from local.properties file or from environment variables, which could be used on CI
 val secretPropsFile = project.rootProject.file("local.properties")
@@ -28,79 +29,68 @@ if (secretPropsFile.exists()) {
     ext["signing.password"] = System.getenv("SIGNING_PASSWORD")
     ext["signing.secretKeyRingFile"] = System.getenv("SIGNING_SECRET_KEY_RING_FILE")
     ext["signing.key"] = System.getenv("GPG_KEY_CONTENTS")
-    ext["ossrhUsername"] = System.getenv("OSSRH_USERNAME")
-    ext["ossrhPassword"] = System.getenv("OSSRH_PASSWORD")
-}
-
-val javadocJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("javadoc")
+    ext["mavenCentralUsername"] = System.getenv("MAVEN_CENTRAL_USERNAME")
+    ext["mavenCentralPassword"] = System.getenv("MAVEN_CENTRAL_PASSWORD")
 }
 
 fun getExtraString(name: String) = ext[name]?.toString()
 
-publishing {
-    // Configure maven central repository
-    repositories {
-        maven {
-            name = "sonatype"
-            setUrl("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            credentials {
-                username = getExtraString("ossrhUsername")
-                password = getExtraString("ossrhPassword")
+mavenPublishing {
+    // Configure publishing to Maven Central
+    publishToMavenCentral()
+
+    // Configure signing
+    signAllPublications()
+
+    // Configure what to publish - for Kotlin Multiplatform projects
+    configure(KotlinMultiplatform(
+        javadocJar = JavadocJar.Empty(),
+        sourcesJar = true,
+        androidVariantsToPublish = listOf("debug", "release")
+    ))
+
+    // Configure publication coordinates and metadata
+    coordinates(
+        groupId = "io.github.funnysaltyfish",
+        artifactId = project.name,
+        version = project.version.toString()
+    )
+
+    // Configure POM metadata
+    pom {
+        name.set("partial-json-parser-kmp")
+        description.set("Parse incomplete JSON (like what ChatGPT generates in stream mode) in Kotlin, obtain as much as possible information fastly.")
+        url.set("https://github.com/FunnySaltyFish/partial-json-parser-kmp")
+
+        licenses {
+            license {
+                name.set("Apache License 2.0")
+                url.set("https://opensource.org/licenses/Apache-2.0")
             }
         }
-    }
 
-    // Configure all publications
-    publications.withType<MavenPublication> {
-        // Stub javadoc.jar artifact
-        artifact(javadocJar.get())
+        developers {
+            developer {
+                id.set("FunnySaltyFish")
+                name.set("FunnySaltyFish")
+                email.set("funnysaltyfish@foxmail.com")
+            }
+        }
 
-        // Provide artifacts information requited by Maven Central
-        pom {
-            name.set("partial-json-parser-kmp")
-            description.set("Parse incomplete JSON (like what ChatGPT generates in stream mode) in Kotlin, obtain as much as possible information fastly.")
+        scm {
             url.set("https://github.com/FunnySaltyFish/partial-json-parser-kmp")
-
-            licenses {
-                license {
-                    name.set("Apache License 2.0")
-                    url.set("https://opensource.org/licenses/Apache-2.0")
-                }
-            }
-            developers {
-                developer {
-                    id.set("FunnySaltyFish")
-                    name.set("FunnySaltyFish")
-                    email.set("funnysaltyfish@foxmail.com")
-                }
-            }
-            scm {
-                url.set("https://github.com/FunnySaltyFish/partial-json-parser-kmp")
-                connection.set("scm:git:git://github.com/FunnySaltyFish/partial-json-parser-kmp.git")
-                developerConnection.set("scm:git:ssh://git@github.com/FunnySaltyFish/partial-json-parser-kmp.git")
-            }
+            connection.set("scm:git:git://github.com/FunnySaltyFish/partial-json-parser-kmp.git")
+            developerConnection.set("scm:git:ssh://git@github.com/FunnySaltyFish/partial-json-parser-kmp.git")
         }
     }
 }
 
-// Signing artifacts. Signing.* extra properties values will be used
-signing {
-    val signingKeyId = getExtraString("signing.keyId")
-    val signingPassword = getExtraString("signing.password")
-    val signingSecretKeyRingFile = getExtraString("signing.secretKeyRingFile")
-    val signingKey = getExtraString("signing.key")
-    // 输出一下
-    println("Signing Key ID: $signingKeyId, Signing Password: ${signingPassword?.length}, Signing Secret Key Ring File: $signingSecretKeyRingFile, Signing Key: ${signingKey?.length}")
+// 输出调试信息
+val mavenCentralUsername = getExtraString("mavenCentralUsername")
+val mavenCentralPassword = getExtraString("mavenCentralPassword")
+val signingKeyId = getExtraString("signing.keyId")
+val signingPassword = getExtraString("signing.password")
+val signingKey = getExtraString("signing.key")
 
-    if (signingKey != null && signingKeyId != null && signingPassword != null) {
-        // Use in-memory signing (for CI/CD)
-        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-    } else if (signingKeyId != null && signingPassword != null && signingSecretKeyRingFile != null) {
-        // Use key ring file (for local development)
-        // This will use the default GPG configuration
-        useGpgCmd()
-    }
-
-    sign(publishing.publications)
-}
+println("Signing Key ID: $signingKeyId, Signing Password: ${signingPassword?.length}, Signing Key: ${signingKey?.length}")
+println("mavenCentral Username: $mavenCentralUsername, mavenCentral Password: ${mavenCentralPassword?.length}")

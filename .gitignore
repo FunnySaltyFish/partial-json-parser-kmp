@@ -47,3 +47,5 @@ local.properties
 .idea/
 .kotlin/
 __pycache__/
+
+.history/
