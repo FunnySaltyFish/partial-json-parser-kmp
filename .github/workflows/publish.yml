@@ -96,7 +96,7 @@ jobs:
         run: |
           echo "🚀 开始发布到 Maven Central..."
           echo "📦 发布版本: ${{ steps.version.outputs.version }}"
-          chmod +x ./gradlew && ./gradlew publishAllPublicationsToSonatypeRepository --no-configuration-cache --stacktrace
+          chmod +x ./gradlew && ./gradlew publishAndReleaseToMavenCentral  --no-configuration-cache --stacktrace
           echo "✅ 发布完成"
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
