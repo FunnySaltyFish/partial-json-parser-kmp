@@ -1,0 +1,9 @@
+[versions]
+gradleMavenPublishPlugin = "0.34.0"
+libVersion = "1.0.3"
+libGroup = "io.github.funnysaltyfish"
+kotlin = "2.2.0"
+agp = "8.11.1"
+
+[libraries]
+gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "gradleMavenPublishPlugin" }

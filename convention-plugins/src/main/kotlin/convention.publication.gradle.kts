@@ -50,10 +50,13 @@ mavenPublishing {
     ))
 
     // Configure publication coordinates and metadata
+    val group = libs.findVersionAsString("libGroup")
+    val version = libs.findVersionAsString("libVersion")
+    println("group: $group, version: $version")
     coordinates(
-        groupId = "io.github.funnysaltyfish",
+        groupId = group,
         artifactId = project.name,
-        version = project.version.toString()
+        version = version
     )
 
     // Configure POM metadata
@@ -94,3 +97,8 @@ val signingKey = getExtraString("signing.key")
 
 println("Signing Key ID: $signingKeyId, Signing Password: ${signingPassword?.length}, Signing Key: ${signingKey?.length}")
 println("mavenCentral Username: $mavenCentralUsername, mavenCentral Password: ${mavenCentralPassword?.length}")
+
+val Project.libs
+    get(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
+fun VersionCatalog.findVersionAsString(alias: String) = findVersion(alias).get().toString()

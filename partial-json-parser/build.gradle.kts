@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
-    kotlin("multiplatform") version "2.2.0"
-    id("com.android.library") version "8.11.1"
+    kotlin("multiplatform") version libs.versions.kotlin.get()
+    id("com.android.library") version libs.versions.agp.get()
     id("convention.publication")
 }
 
-group = Config.libGroup
-version = Config.libVersion
+group = libs.versions.libGroup.get()
+version = libs.versions.libVersion.get()
 
 repositories {
     maven("https://mirrors.tencent.com/nexus/repository/maven-public/")
@@ -45,12 +45,12 @@ kotlin {
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
-        outputModuleName.set("composeApp")
+        outputModuleName.set("partialJsonParser")
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
             commonWebpackConfig {
-                outputFileName = "composeApp.js"
+                outputFileName = "partialJsonParser.js"
                 devServer = (devServer ?: KotlinWebpackConfig.DevServer()).apply {
                     static = (static ?: mutableListOf()).apply {
                         // Serve sources to debug inside browser
@@ -89,7 +89,7 @@ kotlin {
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 
 android {
-    namespace = Config.packageName
+    namespace = "com.funnysaltyfish.partialjsonparser"
 
     defaultConfig {
         compileSdk = 35
