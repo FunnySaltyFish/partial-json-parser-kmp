@@ -67,7 +67,7 @@ fun parse(str: String): Any? {
 该库已经发布到 Maven Central，通过下面的方式引入：
 
 ```groovy
-implementation("io.github.funnysaltyfish:partial-json-parser:1.0.3")
+implementation("io.github.funnysaltyfish:partial-json-parser:1.0.4")
 ```
 
 ## 示例
