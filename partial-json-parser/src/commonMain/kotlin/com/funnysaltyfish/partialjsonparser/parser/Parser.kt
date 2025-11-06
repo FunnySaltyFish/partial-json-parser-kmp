@@ -34,11 +34,11 @@ object Parser {
         while (tokens.isNotEmpty()) {
             when (tokens[0].type) {
                 TokenType.RightBracket -> {
-                    tokens.removeFirst()
+                    tokens.removeAt(0)
                     return result
                 }
                 TokenType.Comma -> {
-                    tokens.removeFirst()
+                    tokens.removeAt(0)
                 }
                 else -> {
                     result.add(parseTokens(tokens))
@@ -86,16 +86,16 @@ object Parser {
         while (tokens.isNotEmpty()) {
             when (tokens[0].type) {
                 TokenType.RightBrace -> {
-                    tokens.removeFirst()
+                    tokens.removeAt(0)
                     return result
                 }
 
                 TokenType.Comma -> {
-                    tokens.removeFirst()
+                    tokens.removeAt(0)
                 }
 
                 TokenType.Colon -> {
-                    tokens.removeFirst()
+                    tokens.removeAt(0)
                     if (tokens.isNotEmpty()) {
                         value = parseTokens(tokens)
                         result[key!!] = value
@@ -103,7 +103,7 @@ object Parser {
                 }
 
                 TokenType.String -> {
-                    key = (tokens.removeFirst() as Token.StringToken).value
+                    key = (tokens.removeAt(0) as Token.StringToken).value
                 }
 
                 else -> {
@@ -137,7 +137,7 @@ object Parser {
      */
 
     fun parseTokens(tokens: MutableList<Token>): Any? {
-        val token = tokens.removeFirst()
+        val token = tokens.removeAt(0)
         when (token.type) {
             TokenType.Boolean,
             TokenType.Number,

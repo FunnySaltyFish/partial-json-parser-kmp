@@ -112,7 +112,7 @@ object Completer {
                 }
                 TokenType.RightBrace -> {
                     if (stack.isNotEmpty() && stack.last() == TokenType.LeftBrace) {
-                        stack.removeLast()
+                        stack.removeAt(stack.lastIndex)
                     }
                 }
                 TokenType.LeftBracket -> {
@@ -120,7 +120,7 @@ object Completer {
                 }
                 TokenType.RightBracket -> {
                     if (stack.isNotEmpty() && stack.last() == TokenType.LeftBracket) {
-                        stack.removeLast()
+                        stack.removeAt(stack.lastIndex)
                     }
                 }
                 else -> {}
@@ -146,7 +146,7 @@ object Completer {
                 TokenType.RightBrace -> {
                     sb.append("}")
                     if (stack.isNotEmpty() && stack.last() == StackItem.Object) {
-                        stack.removeLast()
+                        stack.removeAt(stack.lastIndex)
                     }
                 }
                 TokenType.LeftBracket -> {
@@ -156,7 +156,7 @@ object Completer {
                 TokenType.RightBracket -> {
                     sb.append("]")
                     if (stack.isNotEmpty() && stack.last() == StackItem.Array) {
-                        stack.removeLast()
+                        stack.removeAt(stack.lastIndex)
                     }
                 }
                 TokenType.String -> {
@@ -200,7 +200,7 @@ object Completer {
         
         // 关闭所有开放的括号
         while (stack.isNotEmpty()) {
-            when (stack.removeLast()) {
+            when (stack.removeAt(stack.lastIndex)) {
                 StackItem.Object -> sb.append("}")
                 StackItem.Array -> sb.append("]")
             }
